@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useSettingsStore } from "@/stores/SettingsStore";
 import { useWeatherStore } from "@/stores/WeatherStore";
 
@@ -8,12 +8,13 @@ const base = settingsStore.base;
 const settings = settingsStore.settings;
 
 const weatherStore = useWeatherStore();
-const weather: any = weatherStore.weather;
-const getWeather = weatherStore.setWeather;
+const weather = computed(() => weatherStore.getWeather);
+const setWeather = weatherStore.setWeather;
 
-const query: any = ref(`${base.baseUrl}${settings.city}${base.unitUrl}${settings.units}${base.appid}`);
+const query = ref<string>(`${base.baseUrl}${settings.city}${base.unitUrl}${settings.units}${base.appid}`);
 
-const value: any = ref('');
+const value = ref<string>('');
+
 </script>
 
 <template>
@@ -23,7 +24,7 @@ const value: any = ref('');
         <div class="search-form__inner">
           <form
             class="form"
-            @submit.prevent="getWeather(query)"
+            @submit.prevent="setWeather(query)"
           >
             <div class="form__item">
               <input
@@ -46,7 +47,7 @@ const value: any = ref('');
     >
       <div class="container">
         <div class="weather__inner">
-          <p>City: {{  }}</p>
+          <p>City: {{ weather.city.name }}</p>
           <p>Temp: {{  }}</p>
           <p>Wind: {{  }}</p>
         </div>
